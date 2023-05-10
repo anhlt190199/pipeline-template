@@ -1,4 +1,4 @@
-.docker_templates: &docker_templates
+.docker_templates:
   variables:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
