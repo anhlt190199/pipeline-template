@@ -8,4 +8,5 @@
     - hll-runner-core
   services:
     - docker:stable-dind
-
+  image:
+    name: public.ecr.aws/g5j7s8k4/ci-node:v14-gitops

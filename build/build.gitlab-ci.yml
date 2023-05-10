@@ -1,8 +1,8 @@
 .before_script_template: &before_script_template
   before_script:
-  - &dev if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
-  - &staging if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
-  - &production if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
+  - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
+  - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
+  - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
 .caching_template: &caching_template
   cache:
@@ -28,22 +28,26 @@
 
 .script_template: &script_template
   script:
+    - echo "BUILDING TEST service"
+    - echo "$DOCKER_HOST"
+    - echo "$SUPERVAR"
+    - echo "$TEST_VAR"
     # const
-    - APPLICATION=$CI_PROJECT_NAME
-    - VERSION=$ENV-$(git rev-parse --short HEAD)
-    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
-    - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
-    # lint & pre-build
-    - yarn
-    - yarn lint
-    - yarn build:$ENV
+    # - APPLICATION=$CI_PROJECT_NAME
+    # - VERSION=$ENV-$(git rev-parse --short HEAD)
+    # - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
+    # - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
+    # # lint & pre-build
+    # - yarn
+    # - yarn lint
+    # - yarn build:$ENV
 
-    # pre pull image => reused layer-cache (because install package very slow)
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
-    - docker pull $IMAGE_FIX
+    # # pre pull image => reused layer-cache (because install package very slow)
+    # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
+    # - docker pull $IMAGE_FIX
 
-    # build docker
-    - docker build --cache-from=$IMAGE_FIX -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
-    - docker tag $IMAGE_FIX $IMAGE_BACKUP
-    - docker push $IMAGE_FIX
-    - docker push $IMAGE_BACKUP
+    # # build docker
+    # - docker build --cache-from=$IMAGE_FIX -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
+    # - docker tag $IMAGE_FIX $IMAGE_BACKUP
+    # - docker push $IMAGE_FIX
+    # - docker push $IMAGE_BACKUP
