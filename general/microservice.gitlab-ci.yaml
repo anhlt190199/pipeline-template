@@ -5,15 +5,14 @@ include:
   - 'build/build.gitlab-ci.yml'
   - 'docker/docker.gitlab-ci.yml'
 
-.microservice-template:
-  stages:
-    - &step1 build
+stages:
+  - &step1 build
 
-  deploy-service:
-    stage: *step1
-    extends:
-      - .rules_template
-      - .docker_templates
-      - .before_script_template
-      - .script_template
-      - .caching_template
+deploy-service:
+  stage: *step1
+  extends:
+    - .rules_template
+    - .docker_templates
+    - .before_script_template
+    - .script_template
+    - .caching_template
