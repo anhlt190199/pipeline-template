@@ -1,0 +1,31 @@
+---
+include:
+  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+    ref: main
+    file:
+      - 'docker/docker.gitlab-ci.yml'
+
+.rule_develop: &rule_develop
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+
+.artifact: &artifact
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/.sonarqube
+
+sonarqube-scan:
+  extends: .docker_templates
+  stage: sonarqube-scan
+  image: sonarsource/sonar-scanner-cli
+  services: null
+  variables:                             # Tells git to fetch all the branches of the project, required by the analysis task
+    SONAR_SCANNER_OPTS: "-Dsonar.projectKey=$CI_PROJECT_NAME"
+  script:
+    - sonar-scanner
+  allow_failure: true
+  <<: *rule_develop
+  <<: *artifact
