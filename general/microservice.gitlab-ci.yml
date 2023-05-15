@@ -27,3 +27,5 @@ sonarqube-scan:
   image: sonarsource/sonar-scanner-cli
   variables:                             # Tells git to fetch all the branches of the project, required by the analysis task
     SONAR_SCANNER_OPTS: "-Dsonar.projectKey=$CI_PROJECT_NAME"
+  script:
+    - sonar-scanner
