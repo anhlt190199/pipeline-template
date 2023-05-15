@@ -1,10 +1,10 @@
 ---
-# include:
-#   - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
-#     ref: main
-#     file:
-#       - 'build/build.gitlab-ci.yml'
-#       - 'docker/docker.gitlab-ci.yml'
+include:
+  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+    ref: main
+    file:
+      - 'build/build.gitlab-ci.yml'
+      - 'docker/docker.gitlab-ci.yml'
 
 stages:
   - &step0 scan
@@ -21,6 +21,9 @@ stages:
 
 sonarqube-scan:
   stage: *step0
+  extends:
+    - .rules_template
+    - .docker_templates
   image: sonarsource/sonar-scanner-cli
   variables:                             # Tells git to fetch all the branches of the project, required by the analysis task
     SONAR_SCANNER_OPTS: "-Dsonar.projectKey=$CI_PROJECT_NAME"
