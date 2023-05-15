@@ -1,3 +1,4 @@
+---
 .docker_templates:
   variables:
     # common variable
