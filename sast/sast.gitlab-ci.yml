@@ -85,7 +85,7 @@ snyk-scan:
     - .docker_templates
     - .tags_template
   stage: snyk-scan
-  image: snyk/snyk-cli
+  image: snyk/snyk:alpine
   services: null
   variables:
     SNYK_TOKEN: $SNYK_TOKEN
