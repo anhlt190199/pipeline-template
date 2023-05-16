@@ -8,4 +8,5 @@ include:
       - 'sast/sast.gitlab-ci.yml'
 
 stages:
+  - dependency-check
   - sonarqube-scan

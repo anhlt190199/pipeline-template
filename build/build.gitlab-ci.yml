@@ -26,6 +26,10 @@
           || $CI_COMMIT_BRANCH != "master"'
       when: never
 
+.tags_template: &tags_template
+  tags:
+    - hll-runner-core
+
 .script_template: &script_template
   script:
     # const

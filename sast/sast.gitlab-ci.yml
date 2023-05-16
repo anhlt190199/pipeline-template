@@ -4,6 +4,7 @@ include:
     ref: main
     file:
       - 'docker/docker.gitlab-ci.yml'
+      - 'build/build.gitlab-ci.yml'
 
 .rule_develop: &rule_develop
   rules:
@@ -17,18 +18,42 @@ include:
     - if: '$CI_DISABLE_SONARQUBE == "true"'
       when: never
 
-.all_rules: &all_rules
+.disable_dependency_check: &disable_dependency_check
   rules:
-    - !reference [.rule_develop, rules]
-    - !reference [.disable_sonarqube, rules]
+    - if: '$CI_DISABLE_DEPENDENCY_CHECK == "true"'
+      when: never
 
 .artifact: &artifact
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.sonarqube
 
+dependency-check:
+  extends:
+    - .docker_templates
+    - .tags_template
+  stage: dependency-check
+  image: owasp/dependency-check
+  services: null
+  variables:
+    DEPENDENCY_CHECK_REPORT_PATH: $CI_PROJECT_DIR/.dependency-check
+    DEPENDENCY_CHECK_REPORT_FORMAT: "ALL"
+  script:
+    - dependency-check.sh --scan $CI_PROJECT_DIR --format ALL --out $DEPENDENCY_CHECK_REPORT_PATH
+  allow_failure: true
+  rules:
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_dependency_check, rules]
+  artifacts:
+    paths:
+      - $DEPENDENCY_CHECK_REPORT_PATH
+    reports:
+      dependency_scanning: $DEPENDENCY_CHECK_REPORT_PATH/dependency-check-report.xml
+
 sonarqube-scan:
-  extends: .docker_templates
+  extends:
+    - .docker_templates
+    - .tags_template
   stage: sonarqube-scan
   image: sonarsource/sonar-scanner-cli
   services: null
@@ -37,5 +62,7 @@ sonarqube-scan:
   script:
     - sonar-scanner
   allow_failure: true
-  <<: *all_rules
+  rules:
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_sonarqube, rules]
   <<: *artifact
