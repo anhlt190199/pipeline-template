@@ -10,3 +10,4 @@ include:
 stages:
   - dependency-check
   - sonarqube-scan
+  - snyk-scan
