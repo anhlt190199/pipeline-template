@@ -80,19 +80,19 @@ sonarqube-scan:
     - !reference [.disable_all_scans, rules]
   <<: *artifact
 
-snyk-scan:
-  extends:
-    - .docker_templates
-    - .tags_template
-  stage: snyk-scan
-  image: snyk/snyk-cli
-  services: null
-  variables:
-    SNYK_TOKEN: $SNYK_TOKEN
-  script:
-    - snyk test --all-projects --json > snyk-report.json
-  allow_failure: true
-  rules:
-    - !reference [.rule_develop, rules]
-    - !reference [.disable_snyk, rules]
-    - !reference [.disable_all_scans, rules]
+# snyk-scan:
+#   extends:
+#     - .docker_templates
+#     - .tags_template
+#   stage: snyk-scan
+#   image: snyk/snyk-cli
+#   services: null
+#   variables:
+#     SNYK_TOKEN: $SNYK_TOKEN
+#   script:
+#     - snyk test --all-projects --json > snyk-report.json
+#   allow_failure: true
+#   rules:
+#     - !reference [.rule_develop, rules]
+#     - !reference [.disable_snyk, rules]
+#     - !reference [.disable_all_scans, rules]
