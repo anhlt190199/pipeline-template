@@ -39,7 +39,7 @@ dependency-check:
     DEPENDENCY_CHECK_REPORT_PATH: $CI_PROJECT_DIR/.dependency-check
     DEPENDENCY_CHECK_REPORT_FORMAT: "ALL"
   script:
-    - dependency-check.sh --scan $CI_PROJECT_DIR --format ALL --out $DEPENDENCY_CHECK_REPORT_PATH
+    - dependency-check --scan $CI_PROJECT_DIR --format ALL --out $DEPENDENCY_CHECK_REPORT_PATH
   allow_failure: true
   rules:
     - !reference [.rule_develop, rules]
