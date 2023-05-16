@@ -1,4 +1,10 @@
 ---
+include:
+  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+    ref: ft/sonarqube
+    file:
+      - 'docker/docker.gitlab-ci.yml'
+
 .before_script_template: &before_script_template
   before_script:
     - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
@@ -30,24 +36,36 @@
   tags:
     - hll-runner-core
 
-.script_template: &script_template
+.image_info_template: &image_info_template
   script:
-    # const
     - APPLICATION=$CI_PROJECT_NAME
     - VERSION=$ENV-$(git rev-parse --short HEAD)
     - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
+
+.script_template: &script_template
+  script:
+    # const
+    - !reference [.image_info_template, script]
     # lint & pre-build
     - yarn
     - yarn lint
     - yarn build:$ENV
-    # pre pull image => reused layer-cache (because install package very slow)
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login \
-        --username AWS --password-stdin $DOCKER_REGISTRY_HOST
-    - docker pull $IMAGE_FIX
+    - !reference [.docker_ecr_templates, login]
+    # pull image, if don't have image => build docker
+    - docker pull $IMAGE_FIX || true
     # build docker
     - docker build --cache-from=$IMAGE_FIX \
         -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
     - docker tag $IMAGE_FIX $IMAGE_BACKUP
     - docker push $IMAGE_FIX
     - docker push $IMAGE_BACKUP
+
+.build:
+  extends:
+    - .docker_templates
+    - .before_script_template
+    - .caching_template
+    - .rules_template
+    - .tags_template
+    - .script_template

@@ -3,11 +3,32 @@ include:
   - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
     ref: ft/sonarqube
     file:
-      # - 'build/build.gitlab-ci.yml'
-      # - 'docker/docker.gitlab-ci.yml'
+      - 'build/build.gitlab-ci.yml'
       - 'sast/sast.gitlab-ci.yml'
 
 stages:
   - dependency-check
   - sonarqube-scan
   - snyk-scan
+  - build
+  - trivy-scan
+
+dependency-check:
+  extends: .dependency-check
+  stage: dependency-check
+
+sonarqube-scan:
+  extends: .sonarqube-scan
+  stage: sonarqube-scan
+
+snyk-scan:
+  extends: .snyk-scan
+  stage: snyk-scan
+
+build:
+  extends: .build
+  stage: build
+
+trivy-scan:
+  extends: .trivy-scan
+  stage: trivy-scan

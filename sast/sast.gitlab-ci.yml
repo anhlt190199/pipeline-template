@@ -38,11 +38,10 @@ include:
     paths:
       - $CI_PROJECT_DIR/.sonarqube
 
-dependency-check:
+.dependency-check:
   extends:
     - .docker_templates
     - .tags_template
-  stage: dependency-check
   image: owasp/dependency-check
   services: null
   variables:
@@ -61,11 +60,11 @@ dependency-check:
     reports:
       dependency_scanning: $DEPENDENCY_CHECK_REPORT_PATH/dependency-check-report.xml
 
-sonarqube-scan:
+.sonarqube-scan:
   extends:
     - .docker_templates
     - .tags_template
-  stage: sonarqube-scan
+    - .artifact
   image: sonarsource/sonar-scanner-cli
   services: null
   variables:                             # Tells git to fetch all the branches of the project, required by the analysis task
@@ -78,13 +77,11 @@ sonarqube-scan:
     - !reference [.rule_develop, rules]
     - !reference [.disable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
-  <<: *artifact
 
-snyk-scan:
+.snyk-scan:
   extends:
     - .docker_templates
     - .tags_template
-  stage: snyk-scan
   image: snyk/snyk:alpine
   services: null
   variables:
@@ -97,3 +94,23 @@ snyk-scan:
     - !reference [.rule_develop, rules]
     - !reference [.disable_snyk, rules]
     # - !reference [.disable_all_scans, rules]
+
+.trivy-scan:
+  extends:
+    - .docker_templates
+    - .tags_template
+  image: aquasec/trivy:0.41.0
+  services: null
+  script:
+    - !reference [.image_info_template, script]
+    # scan image
+    - trivy image $IMAGE_FIX
+  allow_failure: true
+  rules:
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_all_scans, rules]
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/.trivy.json
+    reports:
+      container_scanning: $CI_PROJECT_DIR/.trivy.json
