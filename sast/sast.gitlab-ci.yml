@@ -12,6 +12,16 @@ include:
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
 
+.disable_sonarqube: &disable_sonarqube
+  rules:
+    - if: '$CI_DISABLE_SONARQUBE == "true"'
+      when: never
+
+.all_rules: &all_rules
+  rules:
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_sonarqube, rules]
+
 .artifact: &artifact
   artifacts:
     paths:
@@ -27,5 +37,5 @@ sonarqube-scan:
   script:
     - sonar-scanner
   allow_failure: true
-  <<: *rule_develop
+  <<: *all_rules
   <<: *artifact
