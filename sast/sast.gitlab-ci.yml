@@ -30,7 +30,7 @@ include:
 
 .disable_all_scans: &disable_all_scans
   rules:
-    - if: '$CI_DISABLE_ALL_SCANS == "true"'
+    - if: '$DISABLE_ALL_SCANS == "true"'
       when: never
 
 .artifact: &artifact
