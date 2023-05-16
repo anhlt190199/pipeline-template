@@ -54,6 +54,7 @@ dependency-check:
   rules:
     - !reference [.rule_develop, rules]
     - !reference [.disable_dependency_check, rules]
+    - !reference [.disable_all_scans, rules]
   artifacts:
     paths:
       - $DEPENDENCY_CHECK_REPORT_PATH
@@ -76,6 +77,7 @@ sonarqube-scan:
   rules:
     - !reference [.rule_develop, rules]
     - !reference [.disable_sonarqube, rules]
+    - !reference [.disable_all_scans, rules]
   <<: *artifact
 
 snyk-scan:
@@ -93,8 +95,4 @@ snyk-scan:
   rules:
     - !reference [.rule_develop, rules]
     - !reference [.disable_snyk, rules]
-  artifacts:
-    paths:
-      - snyk-report.json
-    reports:
-      snyk: snyk-report.json
+    - !reference [.disable_all_scans, rules]
