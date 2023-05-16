@@ -23,6 +23,16 @@ include:
     - if: '$CI_DISABLE_DEPENDENCY_CHECK == "true"'
       when: never
 
+.disable_snyk: &disable_snyk
+  rules:
+    - if: '$CI_DISABLE_SNYK == "true"'
+      when: never
+
+.disable_all_scans: &disable_all_scans
+  rules:
+    - if: '$CI_DISABLE_ALL_SCANS == "true"'
+      when: never
+
 .artifact: &artifact
   artifacts:
     paths:
@@ -58,7 +68,7 @@ sonarqube-scan:
   image: sonarsource/sonar-scanner-cli
   services: null
   variables:                             # Tells git to fetch all the branches of the project, required by the analysis task
-    SONAR_SCANNER_OPTS: "-Dsonar.projectKey=$CI_PROJECT_NAME"
+    SONAR_SCANNER_OPTS: "-Dsonar.projectKey=$CI_PROJECT_NAME -Dsonar.dependencyCheck.jsonReportPath=$CI_PROJECT_DIR/.dependency-check/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=$CI_PROJECT_DIR/.dependency-check/dependency-check-report.html -Dsonar.dependencyCheck.xmlReportPath=$CI_PROJECT_DIR/.dependency-check/dependency-check-report.xml"
     WORKSPACE: ".dependency-check"
   script:
     - sonar-scanner
@@ -67,3 +77,24 @@ sonarqube-scan:
     - !reference [.rule_develop, rules]
     - !reference [.disable_sonarqube, rules]
   <<: *artifact
+
+snyk-scan:
+  extends:
+    - .docker_templates
+    - .tags_template
+  stage: snyk-scan
+  image: snyk/snyk-cli
+  services: null
+  variables:
+    SNYK_TOKEN: $SNYK_TOKEN
+  script:
+    - snyk test --all-projects --json > snyk-report.json
+  allow_failure: true
+  rules:
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_snyk, rules]
+  artifacts:
+    paths:
+      - snyk-report.json
+    reports:
+      snyk: snyk-report.json
