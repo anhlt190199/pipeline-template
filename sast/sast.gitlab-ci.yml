@@ -1,7 +1,7 @@
 ---
 include:
   - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
-    ref: main
+    ref: ft/sonarqube
     file:
       - 'docker/docker.gitlab-ci.yml'
       - 'build/build.gitlab-ci.yml'
