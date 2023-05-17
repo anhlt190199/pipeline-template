@@ -104,13 +104,14 @@ include:
   extends:
     - .docker_templates
     - .tags_template
-  image: aquasec/trivy:0.41.0
+  # image: aquasec/trivy:0.41.0
   # services: null
   script:
     - !reference [.image_info_template, script]
     # scan image
     - !reference [.docker_ecr_templates, login]
-    - trivy image $IMAGE_FIX
+    # - trivy image $IMAGE_FIX
+    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $CI_PROJECT_DIR:/workdir aquasec/trivy:0.41.0 image --exit-code 0 --severity HIGH,CRITICAL --format json -o $CI_PROJECT_DIR/.trivy.json $IMAGE_FIX
   allow_failure: true
   rules:
     # - !reference [.rule_develop, rules]
