@@ -23,14 +23,14 @@ include:
 
 .rules_template: &rules_template
   rules:
-    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
-          || $CI_COMMIT_BRANCH != "deployment/staging"
-          || $CI_COMMIT_BRANCH != "master"'
-      when: never
     - if: '$CI_COMMIT_BRANCH == "deployment/dev"
           || $CI_COMMIT_BRANCH == "deployment/staging"
           || $CI_COMMIT_BRANCH == "master"'
       when: always
+    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+          || $CI_COMMIT_BRANCH != "deployment/staging"
+          || $CI_COMMIT_BRANCH != "master"'
+      when: never
 
 .tags_template: &tags_template
   tags:
