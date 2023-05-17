@@ -6,9 +6,9 @@
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
     # enable buildkit
-    DOCKER_BUILDKIT: 1
+    # DOCKER_BUILDKIT: 1
     # enable layer-cache
-    DOCKER_BUILDKIT_CACHE: 1
+    # DOCKER_BUILDKIT_CACHE: 1
   services:
     - docker:stable-dind
   image:
