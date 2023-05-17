@@ -83,11 +83,9 @@ sonarqube-scan:
   dependencies:
     - dependency-check
   rules:
-    - !reference [.rule_develop, rules]
-    - !reference [.disable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
-
-
+    - !reference [.disable_sonarqube, rules]
+    - !reference [.rule_develop, rules]
 
 trivy-scan:
   extends:
@@ -132,6 +130,8 @@ snyk-scan:
       when: never
     - if: $SNYK_TOKEN != ""
       when: always
+    - if : '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
 
 test:
   script:
