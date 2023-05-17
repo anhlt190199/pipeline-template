@@ -8,8 +8,7 @@ include:
 
 .rule_develop: &rule_develop
   rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-      when: on_success
+    - when: on_success
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
     # - !reference [.rules_template, rules]
@@ -99,12 +98,12 @@ snyk-scan:
     - snyk test
   allow_failure: true
   rules:
-    # - !reference [.rule_develop, rules]
-    # - !reference [.disable_snyk, rules]
-    - if: '$CI_COMMIT_BRANCH == "develop"'
+    - !reference [.rule_develop, rules]
+    - !reference [.disable_snyk, rules]
+    # - if: '$CI_COMMIT_BRANCH == "develop"'
       # when: on_success
-    - if: $SNYK_TOKEN == ""
-      when: never
+    # - if: $SNYK_TOKEN == ""
+      # when: never
     # - !reference [.disable_all_scans, rules]
 
 trivy-scan:
