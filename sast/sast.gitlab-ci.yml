@@ -28,6 +28,11 @@ include:
     - if: '$CI_DISABLE_SNYK == "true"'
       when: never
 
+.disable_trivy: &disable_trivy
+  rules:
+    - if: '$CI_DISABLE_TRIVY == "true"'
+      when: never
+
 .disable_all_scans: &disable_all_scans
   rules:
     - if: '$DISABLE_ALL_SCANS == "true"'
@@ -107,8 +112,10 @@ include:
     - trivy image $IMAGE_FIX
   allow_failure: true
   rules:
-    - !reference [.rule_develop, rules]
+    # - !reference [.rule_develop, rules]
+    - !reference [.disable_trivy, rules]
     - !reference [.disable_all_scans, rules]
+    - !reference [.rules_template, rules]
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.trivy.json
