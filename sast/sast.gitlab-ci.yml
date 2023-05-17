@@ -25,7 +25,7 @@ include:
 .disable_snyk: &disable_snyk
   rules:
     - if: '$CI_DISABLE_SNYK == "true"
-      || $SNYK_TOKEN == ""'
+      || SNYKTOKEN$SNYK_TOKEN == "SNYKTOKEN"'
       when: never
 
 .disable_trivy: &disable_trivy
