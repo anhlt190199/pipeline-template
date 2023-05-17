@@ -30,7 +30,7 @@ include:
     - if: '$CI_COMMIT_BRANCH == "deployment/dev"
           || $CI_COMMIT_BRANCH == "deployment/staging"
           || $CI_COMMIT_BRANCH == "master"'
-      when: on_success
+      when: always
 
 .tags_template: &tags_template
   tags:
