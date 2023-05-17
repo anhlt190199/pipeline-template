@@ -116,7 +116,7 @@ trivy-scan:
     # scan image
     - !reference [.docker_ecr_templates, login]
     # - trivy image $IMAGE_FIX
-    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $CI_PROJECT_DIR:/workdir aquasec/trivy:0.41.0 image --exit-code 0 --severity HIGH,CRITICAL --format json -o /workdir/.trivy.json $IMAGE_BACKUP
+    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $CI_PROJECT_DIR:/workdir aquasec/trivy:0.41.0 image --exit-code 0 --severity HIGH,CRITICAL --format json -o /workdir/.trivy.json $IMAGE_FIX
   allow_failure: true
   rules:
     # - !reference [.rule_develop, rules]
