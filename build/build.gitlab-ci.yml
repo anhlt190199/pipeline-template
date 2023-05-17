@@ -54,6 +54,7 @@ include:
     - !reference [.docker_ecr_templates, login]
     # DOCKER BUILDKIT LAYER CACHING NO NEED TO PULL IMAGE
     # it cache the layer from the ecr
+    - docker pull $IMAGE_FIX || true
     - >
       docker build --cache-from=$IMAGE_FIX
       -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
