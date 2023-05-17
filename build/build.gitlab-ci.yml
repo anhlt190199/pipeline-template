@@ -53,7 +53,7 @@ include:
     - yarn build:$ENV
     - !reference [.docker_ecr_templates, login]
     # pull image, if don't have image => build docker
-    - docker pull $IMAGE_FIX || true
+    # - docker pull $IMAGE_FIX || true
     # build docker
     - >
       docker build --cache-from=$IMAGE_FIX
