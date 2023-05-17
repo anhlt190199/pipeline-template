@@ -7,6 +7,6 @@ include:
       - 'sast/sast.gitlab-ci.yml'
 
 stages:
-  - &prebuild prebuild-scan
+  - &prebuild pre-build
   - &build build
   - &post-build post-build
