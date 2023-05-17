@@ -94,8 +94,6 @@ snyk-scan:
     - .tags_template
   image: snyk/snyk:alpine
   services: null
-  variables:
-    SNYK_TOKEN: $SNYK_TOKEN
   script:
     - snyk monitor
     - snyk test
