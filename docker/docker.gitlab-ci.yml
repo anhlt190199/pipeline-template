@@ -16,5 +16,6 @@
 .docker_ecr_templates:
   login:
     # pre pull image => reused layer-cache (because install package very slow)
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login \
-        --username AWS --password-stdin $DOCKER_REGISTRY_HOST
+    - >
+      aws ecr get-login-password --region $AWS_DEFAULT_REGION |
+      docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
