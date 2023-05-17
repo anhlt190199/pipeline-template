@@ -98,12 +98,10 @@ snyk-scan:
     - snyk test
   allow_failure: true
   rules:
-    - if: $SNYK_TOKEN == ""
-      when: never
+    - if: $SNYK_TOKEN != ""
+      when: always
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-      when: always
 
 trivy-scan:
   extends:
@@ -137,7 +135,7 @@ test:
   script:
     - echo "test"
   rules:
-    - if: '$CI_COMMIT_BRANCH != "develop"'
-      when: never
-    - when: always
-      if: '$ABC == "123"'
+    # - if: '$CI_COMMIT_BRANCH != "develop"'
+    #   when: never
+    # - when: always
+    #   if: '$ABC == "123"'
