@@ -8,10 +8,14 @@ include:
 
 .rule_develop: &rule_develop
   rules:
-    - when: on_success
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
     # - !reference [.rules_template, rules]
+    - if: '$CREATE_USER == "true"'
+      when: never
+
 
 .disable_sonarqube: &disable_sonarqube
   rules:
@@ -133,3 +137,11 @@ trivy-scan:
       - $CI_PROJECT_DIR/.trivy.json
     reports:
       container_scanning: $CI_PROJECT_DIR/.trivy.json
+
+test:
+  script:
+    - echo "test"
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+    - when: always
