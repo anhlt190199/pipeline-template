@@ -135,7 +135,7 @@ test:
   script:
     - echo "test"
   rules:
-    # - if: '$CI_COMMIT_BRANCH != "develop"'
-    #   when: never
-    # - when: always
-    #   if: '$ABC == "123"'
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+    - when: always
+      if: '$ABC == "123"'
