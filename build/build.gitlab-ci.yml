@@ -52,9 +52,8 @@ include:
     - yarn lint
     - yarn build:$ENV
     - !reference [.docker_ecr_templates, login]
-    # pull image, if don't have image => build docker
-    # - docker pull $IMAGE_FIX || true
-    # build docker
+    # DOCKER BUILDKIT LAYER CACHING NO NEED TO PULL IMAGE
+    # it cache the layer from the ecr
     - >
       docker build --cache-from=$IMAGE_FIX
       -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
