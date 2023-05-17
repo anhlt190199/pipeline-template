@@ -105,10 +105,11 @@ include:
     - .docker_templates
     - .tags_template
   image: aquasec/trivy:0.41.0
-  services: null
+  # services: null
   script:
     - !reference [.image_info_template, script]
     # scan image
+    - !reference [.docker_ecr_templates, login]
     - trivy image $IMAGE_FIX
   allow_failure: true
   rules:
