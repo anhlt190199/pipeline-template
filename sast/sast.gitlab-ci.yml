@@ -26,7 +26,7 @@ include:
   rules:
     - if: '$CI_DISABLE_SNYK == "true"'
       when: never
-    - if: '$SNYK_TOKEN == ""'
+    - if: $SNYK_TOKEN == ''
       when: never
 
 .disable_trivy: &disable_trivy
@@ -101,7 +101,6 @@ snyk-scan:
     - !reference [.disable_all_scans, rules]
     - !reference [.disable_snyk, rules]
     - !reference [.rule_develop, rules]
-
 
 trivy-scan:
   extends:
