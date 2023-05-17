@@ -43,7 +43,7 @@ include:
     paths:
       - $CI_PROJECT_DIR/.sonarqube
 
-.dependency-check:
+dependency-check:
   extends:
     - .docker_templates
     - .tags_template
@@ -59,13 +59,14 @@ include:
     - !reference [.rule_develop, rules]
     - !reference [.disable_dependency_check, rules]
     - !reference [.disable_all_scans, rules]
+  stage: pre-build
   artifacts:
     paths:
       - $DEPENDENCY_CHECK_REPORT_PATH
     reports:
       dependency_scanning: $DEPENDENCY_CHECK_REPORT_PATH/dependency-check-report.xml
 
-.sonarqube-scan:
+sonarqube-scan:
   extends:
     - .docker_templates
     - .tags_template
@@ -78,12 +79,15 @@ include:
   script:
     - sonar-scanner
   allow_failure: true
+  dependencies:
+    - dependency-check
   rules:
     - !reference [.rule_develop, rules]
     - !reference [.disable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
+  stage: pre-build
 
-.snyk-scan:
+snyk-scan:
   extends:
     - .docker_templates
     - .tags_template
@@ -99,8 +103,9 @@ include:
     - !reference [.rule_develop, rules]
     - !reference [.disable_snyk, rules]
     # - !reference [.disable_all_scans, rules]
+  stage: pre-build
 
-.trivy-scan:
+trivy-scan:
   extends:
     - .docker_templates
     - .tags_template
@@ -118,6 +123,7 @@ include:
     - !reference [.disable_trivy, rules]
     - !reference [.disable_all_scans, rules]
     - !reference [.rules_template, rules]
+  stage: post-build
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.trivy.json
