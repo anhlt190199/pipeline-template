@@ -87,21 +87,7 @@ sonarqube-scan:
     - !reference [.disable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
 
-snyk-scan:
-  extends:
-    - .docker_templates
-    - .tags_template
-  image: snyk/snyk:alpine
-  services: null
-  script:
-    - snyk monitor
-    - snyk test
-  allow_failure: true
-  rules:
-    - if: $SNYK_TOKEN != ""
-      when: always
-    - if: '$CI_COMMIT_BRANCH != "develop"'
-      when: never
+
 
 trivy-scan:
   extends:
@@ -130,6 +116,22 @@ trivy-scan:
       - $CI_PROJECT_DIR/.trivy.json
     reports:
       container_scanning: $CI_PROJECT_DIR/.trivy.json
+
+snyk-scan:
+  extends:
+    - .docker_templates
+    - .tags_template
+  image: snyk/snyk:alpine
+  services: null
+  script:
+    - snyk monitor
+    - snyk test
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+    - if: $SNYK_TOKEN != ""
+      when: always
 
 test:
   script:
