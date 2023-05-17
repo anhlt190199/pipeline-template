@@ -7,28 +7,26 @@ include:
       - 'sast/sast.gitlab-ci.yml'
 
 stages:
-  - dependency-check
-  - sonarqube-scan
-  - snyk-scan
-  - build
-  - trivy-scan
+  - &prebuild prebuild-scan
+  - &build build
+  - &post-build post-build
 
 dependency-check:
   extends: .dependency-check
-  stage: dependency-check
+  stage: *prebuild
 
 sonarqube-scan:
   extends: .sonarqube-scan
-  stage: sonarqube-scan
+  stage: *prebuild
 
 snyk-scan:
   extends: .snyk-scan
-  stage: snyk-scan
+  stage: *prebuild
 
 build:
   extends: .build
-  stage: build
+  stage: *build
 
 trivy-scan:
   extends: .trivy-scan
-  stage: trivy-scan
+  stage: *post-build
