@@ -59,7 +59,6 @@ dependency-check:
     - !reference [.rule_develop, rules]
     - !reference [.disable_dependency_check, rules]
     - !reference [.disable_all_scans, rules]
-  stage: pre-build
   artifacts:
     paths:
       - $DEPENDENCY_CHECK_REPORT_PATH
@@ -85,7 +84,6 @@ sonarqube-scan:
     - !reference [.rule_develop, rules]
     - !reference [.disable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
-  stage: pre-build
 
 snyk-scan:
   extends:
@@ -103,7 +101,6 @@ snyk-scan:
     - !reference [.rule_develop, rules]
     - !reference [.disable_snyk, rules]
     # - !reference [.disable_all_scans, rules]
-  stage: pre-build
 
 trivy-scan:
   extends:
@@ -125,7 +122,6 @@ trivy-scan:
     - !reference [.disable_trivy, rules]
     - !reference [.disable_all_scans, rules]
     - !reference [.rules_template, rules]
-  stage: post-build
   needs:
     - build
   artifacts:

@@ -5,8 +5,3 @@ include:
     file:
       - 'build/build.gitlab-ci.yml'
       - 'sast/sast.gitlab-ci.yml'
-
-stages:
-  - &prebuild pre-build
-  - &build build
-  - &post-build post-build

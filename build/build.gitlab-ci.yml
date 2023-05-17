@@ -62,7 +62,6 @@ include:
     - docker push $IMAGE_BACKUP
 
 build:
-  stage: build
   extends:
     - .docker_templates
     - .before_script_template
