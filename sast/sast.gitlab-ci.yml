@@ -141,4 +141,4 @@ test:
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
     - when: always
-      if: '$CI_COMMIT_BRANCH == "master"'
+      if: '$ABC == "123"'
