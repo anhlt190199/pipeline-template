@@ -44,7 +44,7 @@ include:
     paths:
       - $CI_PROJECT_DIR/.sonarqube
 
-dependency-check:
+.dependency-check:
   extends:
     - .docker_templates
     - .tags_template
@@ -66,7 +66,7 @@ dependency-check:
     reports:
       dependency_scanning: $DEPENDENCY_CHECK_REPORT_PATH/dependency-check-report.xml
 
-sonarqube-scan:
+.sonarqube-scan:
   extends:
     - .docker_templates
     - .tags_template
@@ -87,7 +87,7 @@ sonarqube-scan:
     - !reference [.rule_develop, rules]
 
 
-snyk-scan:
+.snyk-scan:
   extends:
     - .docker_templates
     - .tags_template
@@ -102,7 +102,7 @@ snyk-scan:
     - !reference [.disable_snyk, rules]
     - !reference [.rule_develop, rules]
 
-trivy-scan:
+.trivy-scan:
   extends:
     - .docker_templates
     - .tags_template
