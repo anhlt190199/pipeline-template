@@ -8,11 +8,11 @@ include:
 
 .rule_develop: &rule_develop
   rules:
-    # - if: '$CI_COMMIT_BRANCH == "develop"'
-    #   when: on_success
-    # - if: '$CI_COMMIT_BRANCH != "develop"'
-    #   when: never
-    - !reference [.rules_template, rules]
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+    # - !reference [.rules_template, rules]
 
 .disable_sonarqube: &disable_sonarqube
   rules:
@@ -103,6 +103,8 @@ snyk-scan:
     # - !reference [.disable_snyk, rules]
     - if: $SNYK_TOKEN == ""
       when: never
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
     # - !reference [.disable_all_scans, rules]
 
 trivy-scan:
