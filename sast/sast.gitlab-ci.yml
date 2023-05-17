@@ -8,10 +8,9 @@ include:
 
 .rule_develop: &rule_develop
   rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-      when: on_success
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
+    - when: on_success
 
 .disable_sonarqube: &disable_sonarqube
   rules:
@@ -87,6 +86,23 @@ sonarqube-scan:
     - !reference [.disable_sonarqube, rules]
     - !reference [.rule_develop, rules]
 
+
+snyk-scan:
+  extends:
+    - .docker_templates
+    - .tags_template
+  image: snyk/snyk:alpine
+  services: null
+  script:
+    - snyk monitor
+    - snyk test
+  allow_failure: true
+  rules:
+    - !reference [.disable_all_scans, rules]
+    - !reference [.disable_snyk, rules]
+    - !reference [.rule_develop, rules]
+
+
 trivy-scan:
   extends:
     - .docker_templates
@@ -103,9 +119,8 @@ trivy-scan:
     - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $CI_PROJECT_DIR:/workdir aquasec/trivy:0.41.0 image --exit-code 0 -o /workdir/.trivy-report.md $IMAGE_FIX
   allow_failure: true
   rules:
-    # - !reference [.rule_develop, rules]
-    - !reference [.disable_trivy, rules]
     - !reference [.disable_all_scans, rules]
+    - !reference [.disable_trivy, rules]
     - !reference [.rules_template, rules]
   needs:
     - build
@@ -114,30 +129,3 @@ trivy-scan:
       - $CI_PROJECT_DIR/.trivy.json
     reports:
       container_scanning: $CI_PROJECT_DIR/.trivy.json
-
-snyk-scan:
-  extends:
-    - .docker_templates
-    - .tags_template
-  image: snyk/snyk:alpine
-  services: null
-  script:
-    - snyk monitor
-    - snyk test
-  allow_failure: true
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "develop"'
-      when: never
-    - if: $SNYK_TOKEN != ""
-      when: always
-    - if : '$CI_COMMIT_BRANCH == "develop"'
-      when: on_success
-
-test:
-  script:
-    - echo "test"
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "develop"'
-      when: never
-    - when: always
-      if: '$ABC == "123"'
