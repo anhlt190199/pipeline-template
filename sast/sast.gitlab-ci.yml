@@ -98,13 +98,12 @@ snyk-scan:
     - snyk test
   allow_failure: true
   rules:
-    - !reference [.rule_develop, rules]
-    - !reference [.disable_snyk, rules]
-    # - if: '$CI_COMMIT_BRANCH == "develop"'
-      # when: on_success
-    # - if: $SNYK_TOKEN == ""
-      # when: never
-    # - !reference [.disable_all_scans, rules]
+    - if: $SNYK_TOKEN == ""
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: always
 
 trivy-scan:
   extends:
