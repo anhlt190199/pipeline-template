@@ -12,10 +12,6 @@ include:
       when: on_success
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
-    # - !reference [.rules_template, rules]
-    - if: '$CREATE_USER == "true"'
-      when: never
-
 
 .disable_sonarqube: &disable_sonarqube
   rules:
@@ -145,3 +141,4 @@ test:
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
     - when: always
+      if: '$CI_COMMIT_BRANCH == "master"'
