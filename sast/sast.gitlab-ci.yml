@@ -91,7 +91,7 @@ include:
   extends:
     - .docker_templates
     - .tags_template
-  image: snyk/snyk:alpine
+  image: snyk/snyk:node
   services: null
   script:
     - snyk monitor
