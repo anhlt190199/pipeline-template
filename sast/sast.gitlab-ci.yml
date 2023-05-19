@@ -55,7 +55,8 @@ include:
     DEPENDENCY_CHECK_REPORT_PATH: $CI_PROJECT_DIR/.dependency-check
     DEPENDENCY_CHECK_REPORT_FORMAT: "ALL"
   script:
-    - yarn
+    # - yarn
+    - ls -al
     - /usr/share/dependency-check/bin/dependency-check.sh --scan $CI_PROJECT_DIR --format ALL --out $DEPENDENCY_CHECK_REPORT_PATH
   allow_failure: true
   rules:
