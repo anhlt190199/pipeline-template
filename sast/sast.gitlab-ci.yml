@@ -24,9 +24,12 @@ include:
 
 .disable_snyk: &disable_snyk
   rules:
-    - if: '$CI_DISABLE_SNYK == "true"'
-      when: never
+    # - if: '$CI_DISABLE_SNYK == "true"'
+    #   when: never
     - if: $SNYK_TOKEN == null
+      when: never
+    # alway disable snyk if not have CI_ENABLE_SNYK
+    - if: $CI_ENABLE_SNYK == null
       when: never
 
 .disable_trivy: &disable_trivy
@@ -128,6 +131,6 @@ include:
     - build
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/.trivy.json
+      - $CI_PROJECT_DIR/.trivy-report.md
     reports:
-      container_scanning: $CI_PROJECT_DIR/.trivy.json
+      container_scanning: $CI_PROJECT_DIR/.trivy-report.md
