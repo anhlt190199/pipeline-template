@@ -17,6 +17,12 @@ include:
     - if: '$CI_DISABLE_SONARQUBE == "true"'
       when: never
 
+# enable sonarqube if branch is sonarqube
+.enable_sonarqube: &enable_sonarqube
+  rules:
+    - if: '$CI_COMMIT_BRANCH = "sonarqube"'
+      when: always
+
 .disable_dependency_check: &disable_dependency_check
   rules:
     - if: '$CI_DISABLE_DEPENDENCY_CHECK == "true"'
@@ -88,6 +94,7 @@ include:
   dependencies:
     - dependency-check
   rules:
+    - !reference [.enable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
     - !reference [.disable_sonarqube, rules]
     - !reference [.rule_develop, rules]
