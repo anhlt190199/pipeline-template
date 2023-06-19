@@ -94,11 +94,10 @@ include:
   dependencies:
     - dependency-check
   rules:
-    - !reference [.enable_sonarqube, rules]
+    # - !reference [.enable_sonarqube, rules]
     - !reference [.disable_all_scans, rules]
     - !reference [.disable_sonarqube, rules]
     - !reference [.rule_develop, rules]
-
 
 .snyk-scan:
   extends:
