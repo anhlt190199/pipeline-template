@@ -20,7 +20,7 @@ include:
 # enable sonarqube if branch is sonarqube
 .enable_sonarqube: &enable_sonarqube
   rules:
-    - if: '$CI_COMMIT_BRANCH = "sonarqube"'
+    - if: '$CI_COMMIT_BRANCH == "sonarqube"'
       when: always
 
 .disable_dependency_check: &disable_dependency_check
@@ -73,6 +73,7 @@ include:
     - !reference [.disable_dependency_check, rules]
     - !reference [.rule_develop, rules]
   artifacts:
+    when: always
     paths:
       - $DEPENDENCY_CHECK_REPORT_PATH
     reports:
