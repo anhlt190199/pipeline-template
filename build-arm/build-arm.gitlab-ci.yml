@@ -8,7 +8,7 @@ include:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: moby/buildkit:v0.12.1
+    name: ladung/node-buildkit:latest
   artifacts:
     paths:
       - dist
@@ -17,9 +17,9 @@ include:
     # const
     - !reference [.image_info_template, script]
     # lint & pre-build
-    # - yarn
-    # - yarn lint
-    # - yarn build:$ENV
+    - yarn
+    - yarn lint
+    - yarn build:$ENV
     # - docker pull $IMAGE_FIX || true
     # - >
     #   docker build --cache-from=$IMAGE_FIX
