@@ -8,7 +8,7 @@ include:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: ladung/node16-buildkit12:latest
+    name: ladung/node16-buildkit12:docker-aws
   artifacts:
     paths:
       - dist
@@ -25,8 +25,9 @@ include:
     #   docker build --cache-from=$IMAGE_FIX
     #   -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
     - ls -la
-    - wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/0.6.0/linux-amd64/docker-credential-ecr-login -O /usr/local/bin/docker-credential-ecr-login
-    - chmod 755 /usr/local/bin/docker-credential-ecr-login
+    - >
+      aws ecr get-login-password --region $AWS_DEFAULT_REGION |
+      docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
     - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
     - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_BACKUP,push=true
 
