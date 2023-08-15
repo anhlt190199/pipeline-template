@@ -8,7 +8,7 @@ include:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: ladung/node-buildkit:latest
+    name: ladung/node16-buildkit12:latest
   artifacts:
     paths:
       - dist
