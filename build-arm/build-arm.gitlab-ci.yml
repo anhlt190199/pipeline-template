@@ -1,0 +1,38 @@
+include:
+  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+    ref: main
+    file:
+      - 'build/build.gitlab-ci.yml'
+.docker_templates_arm:
+  variables:
+    # common variable
+    DOCKER_HOST: tcp://localhost:2375
+  image:
+    name: moby/buildkit:v0.12.1
+  artifacts:
+    paths:
+      - dist
+.script_template_arm:
+  script:
+    # const
+    - !reference [.image_info_template, script]
+    # lint & pre-build
+    # - yarn
+    # - yarn lint
+    # - yarn build:$ENV
+    # - docker pull $IMAGE_FIX || true
+    # - >
+    #   docker build --cache-from=$IMAGE_FIX
+    #   -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
+    - wget https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/0.6.0/linux-amd64/docker-credential-ecr-login -O /usr/local/bin/docker-credential-ecr-login
+    - chmod 755 /usr/local/bin/docker-credential-ecr-login
+    - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --opt filename=./docker/dev.Dockerfile. --output type=image,name=${image},push=true
+    - buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=. --output type=image,name=${repository}:${tag},push=true
+
+.build_arm:
+  extends:
+    - .docker_templates_arm
+    - .before_script_template
+    - .rules_template
+    - .tags_template
+    - .script_template_arm
