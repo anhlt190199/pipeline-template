@@ -4,7 +4,7 @@ include:
     ref: main
     file:
       - 'build/build.gitlab-ci.yml'
-      - 'build-arm/build-arm.gitlab-ci.yml'
+      # - 'build-arm/build-arm.gitlab-ci.yml'
       - 'sast/sast.gitlab-ci.yml'
 
 build:
