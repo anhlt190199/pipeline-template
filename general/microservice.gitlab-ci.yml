@@ -10,9 +10,9 @@ include:
 build:
   extends:
     - .build
-build_arm:
-  extends:
-    - .build_arm
+# build_arm:
+#   extends:
+#     - .build_arm
 dependency-check:
   extends:
     - .dependency-check
