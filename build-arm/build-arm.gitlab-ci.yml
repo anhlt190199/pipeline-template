@@ -33,7 +33,7 @@ include:
 
 .tags_template_arm: &tags_template_arm
   tags:
-    - hll-runner-core
+    - hll-runner-core-arm
 
 .rules_template_arm: &rules_template_arm
   rules:
