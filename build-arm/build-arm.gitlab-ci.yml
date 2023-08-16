@@ -35,10 +35,19 @@ include:
   tags:
     - hll-runner-core
 
+.rules_template_arm: &rules_template_arm
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dungla"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+          || $CI_COMMIT_BRANCH != "deployment/staging"
+          || $CI_COMMIT_BRANCH != "master"'
+      when: never
+
 .build_arm:
   extends:
     - .docker_templates_arm
     - .before_script_template
-    - .rules_template
+    - .rules_template_arm
     - .tags_template_arm
     - .script_template_arm
