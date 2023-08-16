@@ -1,8 +1,15 @@
-include:
-  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
-    ref: main
-    file:
-      - 'build/build.gitlab-ci.yml'
+# include:
+#   - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+#     ref: main
+#     file:
+#       - 'build/build.gitlab-ci.yml'
+
+.image_info_template_arm: &image_info_template_arm
+  script:
+    - APPLICATION=$CI_PROJECT_NAME
+    - VERSION=$ENV-$(git rev-parse --short HEAD)
+    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
+    - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
 .docker_templates_arm:
   variables:
     # common variable
@@ -15,7 +22,7 @@ include:
 .script_template_arm:
   script:
     # const
-    - !reference [.image_info_template, script]
+    - !reference [.image_info_template_arm, script]
     # lint & pre-build
     - yarn
     - yarn lint
@@ -39,16 +46,16 @@ include:
   rules:
     - if: '$CI_COMMIT_BRANCH == "dungla"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
-          || $CI_COMMIT_BRANCH != "deployment/staging"
-          || $CI_COMMIT_BRANCH != "master"'
-      when: never
+    # - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+    #       || $CI_COMMIT_BRANCH != "deployment/staging"
+    #       || $CI_COMMIT_BRANCH != "master"'
+    #   when: never
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
     - if [ "$CI_COMMIT_BRANCH" == "dungla" ]; then ENV="dev"; fi
-    - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
-    - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
+    # - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
+    # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
 
 .build_arm:
