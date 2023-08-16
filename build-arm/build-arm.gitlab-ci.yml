@@ -36,7 +36,11 @@
       aws ecr get-login-password --region $AWS_DEFAULT_REGION |
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
     # - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
-    - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_BACKUP,push=true
+    - >
+      buildctl --addr tcp://buildkitd:1234 
+      build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. 
+      --opt filename=.docker/dev.dockerfile --export-cache type=inline --import-cache type=registry,ref=$IMAGE_FIX
+      --output type=image,name=$IMAGE_BACKUP,push=true
 
 .tags_template_arm: &tags_template_arm
   tags:
