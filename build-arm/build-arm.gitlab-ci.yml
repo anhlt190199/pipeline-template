@@ -31,10 +31,14 @@ include:
     - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
     - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_BACKUP,push=true
 
+.tags_template_arm: &tags_template_arm
+  tags:
+    - hll-runner-core
+
 .build_arm:
   extends:
     - .docker_templates_arm
     - .before_script_template
     - .rules_template
-    - .tags_template
+    - .tags_template_arm
     - .script_template_arm
