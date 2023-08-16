@@ -28,7 +28,7 @@ include:
     - >
       aws ecr get-login-password --region $AWS_DEFAULT_REGION |
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
-    - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
+    # - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
     - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_BACKUP,push=true
 
 .tags_template_arm: &tags_template_arm
@@ -44,10 +44,17 @@ include:
           || $CI_COMMIT_BRANCH != "master"'
       when: never
 
+.before_script_template_arm: &before_script_template_arm
+  before_script:
+    - if [ "$CI_COMMIT_BRANCH" == "dungla" ]; then ENV="dev"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
+
+
 .build_arm:
   extends:
     - .docker_templates_arm
-    - .before_script_template
+    - .before_script_template_arm
     - .rules_template_arm
     - .tags_template_arm
     - .script_template_arm
