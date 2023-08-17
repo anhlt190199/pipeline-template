@@ -57,7 +57,7 @@
     #   --output type=image,name=$IMAGE_BACKUP-amd64
 
     - docker buildx create --use
-    - docker buildx build -f .docker/dev.dockerfile --platform linux/arm64,linux/amd64 --tag $IMAGE_BACKUP-arm64 --tag $IMAGE_BACKUP-amd64 .
+    - docker buildx build -f .docker/dev.dockerfile --platform linux/arm64 --tag $IMAGE_BACKUP-arm64 .
 
     # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
     # - docker manifest push $IMAGE_BACKUP
