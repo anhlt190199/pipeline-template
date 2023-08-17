@@ -40,9 +40,9 @@
     # - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
     - >
       buildctl --addr tcp://buildkitd:1234 
-      build --push-to-digest=false --frontend dockerfile.v0 --opt platform=linux/arm64,linux/amd64 --local context=. --local dockerfile=. 
+      build --frontend dockerfile.v0 --opt platform=linux/arm64,linux/amd64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,\"name=$IMAGE_BACKUP,$IMAGE_FIX\",push=true
+      --output type=image,\"name=$IMAGE_BACKUP,$IMAGE_FIX\",push=true,push-by-digest=false
     # - >
     #   buildctl --addr tcp://buildkitd:1234   
     #   build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
