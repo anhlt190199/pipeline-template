@@ -28,16 +28,10 @@
     - yarn
     - yarn lint
     - yarn build:$ENV
-    # - docker pull $IMAGE_FIX || true
-    # - >
-    #   docker build --cache-from=$IMAGE_FIX
-    #   -t $IMAGE_FIX -f .docker/$ENV.dockerfile .
-    - ls -la
     - ECR_PASSWORD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
     - >
       aws ecr get-login-password --region $AWS_DEFAULT_REGION |
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
-    # - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64,linux/amd64 --local context=. --local dockerfile=. 
