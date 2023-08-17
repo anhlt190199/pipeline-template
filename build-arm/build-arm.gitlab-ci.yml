@@ -40,14 +40,26 @@
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=inline --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-arm,push=false
+      --output type=image,name=$IMAGE_BACKUP-arm64,push=false
     - >
       buildctl --addr tcp://buildkitd:1234   
       build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=inline --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-amd,push=false
-    - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
-    - docker manifest push $IMAGE_BACKUP
+      --output type=image,name=$IMAGE_BACKUP-amd64,push=false
+    # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
+    # - docker manifest push $IMAGE_BACKUP
+    - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
+    - tar -xvf manifest-tool.tar.gz
+    - >-
+      ./manifest-tool-linux-amd64
+      --username=AWS
+      --password=$ECR_PASSWORD
+      push from-args
+      --platforms linux/amd64,linux/arm64
+      --template $ECR:$CI_COMMIT_SHORT_SHA-ARCH
+      --target $ECR:$CI_COMMIT_SHORT_SHA
+
+
 
 .tags_template_arm: &tags_template_arm
   tags:
