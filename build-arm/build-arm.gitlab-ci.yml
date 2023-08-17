@@ -52,7 +52,7 @@
     - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     - tar -xvf manifest-tool.tar.gz
     - >-
-      ./manifest-tool-linux-amd64
+      ./manifest-tool-linux-arm64
       --username=AWS
       --password=$ECR_PASSWORD
       push from-args
