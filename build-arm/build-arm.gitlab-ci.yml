@@ -40,13 +40,13 @@
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=inline --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-arm64
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+      --output type=docker,name=$IMAGE_BACKUP-arm64
     - >
       buildctl --addr tcp://buildkitd:1234   
       build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=inline --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-amd64
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+      --output type=docker,name=$IMAGE_BACKUP-amd64
     # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
     # - docker manifest push $IMAGE_BACKUP
     - apk add curl
