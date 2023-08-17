@@ -10,6 +10,7 @@
     - VERSION=$ENV-$(git rev-parse --short HEAD)
     - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
+    - ECR_REPO=$DOCKER_REGISTRY_HOST/$APPLICATION
 .docker_templates_arm:
   variables:
     # common variable
@@ -41,12 +42,12 @@
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-arm64,push=true
+      --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true
     - >
       buildctl --addr tcp://buildkitd:1234   
       build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$IMAGE_BACKUP-amd64,push=true
+      --output type=image,name=$ECR_REPO:amd-$VERSION,push=true
     # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
     # - docker manifest push $IMAGE_BACKUP
     - apk add curl
@@ -58,7 +59,7 @@
       --password=$ECR_PASSWORD
       push from-args
       --platforms linux/amd64,linux/arm64
-      --template $IMAGE_BACKUP-ARCH
+      --template $ECR_REPO:ARCH-$VERSION
       --target $IMAGE_BACKUP
 
 
