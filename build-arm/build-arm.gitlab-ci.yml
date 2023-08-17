@@ -57,8 +57,8 @@
       --password=$ECR_PASSWORD
       push from-args
       --platforms linux/amd64,linux/arm64
-      --template $ECR:$CI_COMMIT_SHORT_SHA-ARCH
-      --target $ECR:$CI_COMMIT_SHORT_SHA
+      --template $IMAGE_BACKUP-ARCH
+      --target $IMAGE_BACKUP
 
 
 
