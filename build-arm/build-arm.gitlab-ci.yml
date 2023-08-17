@@ -48,6 +48,7 @@
       --output type=image,name=$IMAGE_BACKUP-amd64,push=false
     # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
     # - docker manifest push $IMAGE_BACKUP
+    - apk add curl
     - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     - tar -xvf manifest-tool.tar.gz
     - >-
