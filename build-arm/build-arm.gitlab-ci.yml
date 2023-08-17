@@ -14,6 +14,14 @@
   variables:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+    # enable buildkit
+    DOCKER_BUILDKIT: 1
+    # enable layer-cache
+    DOCKER_BUILDKIT_CACHE: 1
+  services:
+    - docker:stable-dind
   image:
     name: ladung/node16-buildkit12:docker-aws-arm
   artifacts:
@@ -37,16 +45,20 @@
       aws ecr get-login-password --region $AWS_DEFAULT_REGION |
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
     # - buildctl --addr tcp://buildkitd:1234 build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. --opt filename=.docker/dev.dockerfile --output type=image,name=$IMAGE_FIX,push=true
-    - >
-      buildctl --addr tcp://buildkitd:1234 
-      build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=docker,name=$IMAGE_BACKUP-arm64 | docker load
-    - >
-      buildctl --addr tcp://buildkitd:1234   
-      build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=docker,name=$IMAGE_BACKUP-amd64 | docker load
+    # - >
+    #   buildctl --addr tcp://buildkitd:1234 
+    #   build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
+    #   --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+    #   --output type=image,name=$IMAGE_BACKUP-arm64
+    # - >
+    #   buildctl --addr tcp://buildkitd:1234   
+    #   build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
+    #   --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+    #   --output type=image,name=$IMAGE_BACKUP-amd64
+
+    - docker buildx create --use
+    - docker buildx build -f .docker/dev.dockerfile --platform linux/arm64,linux/amd64 --tag $IMAGE_BACKUP-arm64 --tag $IMAGE_BACKUP-amd64 .
+
     # - docker manifest create $IMAGE_BACKUP $IMAGE_BACKUP-arm $IMAGE_BACKUP-amd
     # - docker manifest push $IMAGE_BACKUP
     - apk add curl
