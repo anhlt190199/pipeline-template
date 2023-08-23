@@ -80,7 +80,7 @@
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
-    - if [ "$CI_COMMIT_BRANCH" == "dungla" ]; then ENV="dev"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
     - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
