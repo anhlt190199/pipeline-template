@@ -4,15 +4,15 @@ include:
     ref: main
     file:
       - 'build/build.gitlab-ci.yml'
-      # - 'build-arm/build-arm.gitlab-ci.yml'
+      - 'build-arm/build-arm.gitlab-ci.yml'
       - 'sast/sast.gitlab-ci.yml'
 
 build:
   extends:
     - .build
-# build_arm:
-#   extends:
-#     - .build_arm
+build_arm:
+  extends:
+    - .build_arm
 dependency-check:
   extends:
     - .dependency-check
