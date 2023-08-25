@@ -34,8 +34,8 @@
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
     - >
       buildctl --addr tcp://buildkitd:1234 
-      build --frontend dockerfile.v0 --opt platform=linux/arm64,linux/amd64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/$ENV.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+      build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. 
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
       --output type=image,\"name=$IMAGE_BACKUP,$IMAGE_FIX\",push=true,push-by-digest=false
     # - >
     #   buildctl --addr tcp://buildkitd:1234   
@@ -70,18 +70,17 @@
 
 .rules_template_arm: &rules_template_arm
   rules:
-    - if: '$CI_COMMIT_BRANCH == "deployment/dev"
-          || $CI_COMMIT_BRANCH == "deployment/staging"'
+    - if: '$CI_COMMIT_BRANCH == "dungla"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
-          || $CI_COMMIT_BRANCH != "deployment/staging"
-          || $CI_COMMIT_BRANCH != "master"'
-      when: never
+    # - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+    #       || $CI_COMMIT_BRANCH != "deployment/staging"
+    #       || $CI_COMMIT_BRANCH != "master"'
+    #   when: never
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
-    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
-    - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "dungla" ]; then ENV="dev"; fi
+    # - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
 
@@ -89,7 +88,7 @@
   extends:
     - .docker_templates_arm
     - .before_script_template_arm
-    # - .caching_template
+    - .caching_template
     - .rules_template_arm
     - .tags_template_arm
     - .script_template_arm
