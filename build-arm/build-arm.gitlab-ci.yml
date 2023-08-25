@@ -73,10 +73,10 @@
     - if: '$CI_COMMIT_BRANCH == "deployment/dev"
           || $CI_COMMIT_BRANCH != "deployment/staging"'
       when: always
-    # - if: '$CI_COMMIT_BRANCH != "deployment/dev"
-    #       || $CI_COMMIT_BRANCH != "deployment/staging"
-    #       || $CI_COMMIT_BRANCH != "master"'
-    #   when: never
+    - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+          || $CI_COMMIT_BRANCH != "deployment/staging"
+          || $CI_COMMIT_BRANCH != "master"'
+      when: never
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
