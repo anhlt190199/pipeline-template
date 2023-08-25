@@ -34,25 +34,25 @@
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
     - >
       buildctl --addr tcp://buildkitd:1234 
-      build --frontend dockerfile.v0 --opt platform=linux/amd64,linux/arm64 --local context=. --local dockerfile=. 
+      build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,\"name=$IMAGE_BACKUP,$IMAGE_FIX\",push=true,push-by-digest=false
-    # - >
-    #   buildctl --addr tcp://buildkitd:1234   
-    #   build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
-    #   --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-    #   --output type=image,name=$ECR_REPO:amd64-$VERSION,push=true
-    # - apk add curl
-    # - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
-    # - tar -xvf manifest-tool.tar.gz
-    # - >-
-    #   ./manifest-tool-linux-arm64
-    #   --username=AWS
-    #   --password=$ECR_PASSWORD
-    #   push from-args
-    #   --platforms linux/amd64,linux/arm64
-    #   --template $IMAGE_BACKUP
-    #   --target $IMAGE_BACKUP
+      --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true,push-by-digest=false
+    - >
+      buildctl --addr tcp://buildkitd:1234   
+      build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+      --output type=image,name=$ECR_REPO:amd64-$VERSION,push=true,push-by-digest=false
+    - apk add curl
+    - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
+    - tar -xvf manifest-tool.tar.gz
+    - >-
+      ./manifest-tool-linux-arm64
+      --username=AWS
+      --password=$ECR_PASSWORD
+      push from-args
+      --platforms linux/amd64,linux/arm64
+      --template $IMAGE_BACKUP
+      --target $IMAGE_BACKUP
 
 .caching_template: &caching_template
   cache:
