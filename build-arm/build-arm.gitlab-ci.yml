@@ -89,7 +89,7 @@
   extends:
     - .docker_templates_arm
     - .before_script_template_arm
-    - .caching_template
+    # - .caching_template
     - .rules_template_arm
     - .tags_template_arm
     - .script_template_arm
