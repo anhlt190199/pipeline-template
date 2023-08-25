@@ -72,10 +72,10 @@
   rules:
     - if: '$CI_COMMIT_BRANCH == "dungla"'
       when: always
-    # - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+    - if: '$CI_COMMIT_BRANCH != "dungla"'
     #       || $CI_COMMIT_BRANCH != "deployment/staging"
     #       || $CI_COMMIT_BRANCH != "master"'
-    #   when: never
+      when: never
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
