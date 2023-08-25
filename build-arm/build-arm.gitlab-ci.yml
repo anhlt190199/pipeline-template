@@ -36,12 +36,12 @@
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true,push-by-digest=false
+      --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true
     - >
       buildctl --addr tcp://buildkitd:1234   
       build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
-      --output type=image,name=$ECR_REPO:amd64-$VERSION,push=true,push-by-digest=false
+      --output type=image,name=$ECR_REPO:amd64-$VERSION,push=true
     - apk add curl
     - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     - tar -xvf manifest-tool.tar.gz
