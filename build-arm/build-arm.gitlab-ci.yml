@@ -51,7 +51,7 @@
       --password=$ECR_PASSWORD
       push from-args
       --platforms linux/amd64,linux/arm64
-      --template $IMAGE_BACKUP
+      --template $ECR_REPO:ARCH-$VERSION
       --target $IMAGE_BACKUP
 
 .caching_template: &caching_template
