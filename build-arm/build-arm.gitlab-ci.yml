@@ -16,7 +16,7 @@
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: public.ecr.aws/o0k0x2h7/ci-node:v16-gitop
+    name: ladung/node16-buildkit12:docker-aws
   artifacts:
     paths:
       - dist
@@ -25,8 +25,6 @@
     # const
     - !reference [.image_info_template_arm, script]
     # lint & pre-build
-    - rm -f package-lock.json yarn.lock || true
-    - ls -la
     - yarn install
     - yarn lint
     - yarn build:$ENV
@@ -34,16 +32,16 @@
     - >
       aws ecr get-login-password --region $AWS_DEFAULT_REGION |
       docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
-    # - >
-    #   buildctl --addr tcp://buildkitd:1234 
-    #   build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
-    #   --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache2 --import-cache type=registry,ref=$IMAGE_FIX
-    #   --output type=image,name=$IMAGE_BACKUP,push=true
     - >
-      buildctl --addr tcp://buildkitd:1234   
-      build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile
-      --output type=image,name=$IMAGE_BACKUP,push=true
+      buildctl --addr tcp://buildkitd:1234 
+      build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache2 --import-cache type=registry,ref=$IMAGE_FIX
+      --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true
+    # - >
+    #   buildctl --addr tcp://buildkitd:1234   
+    #   build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
+    #   --opt filename=.docker/dev.dockerfile
+    #   --output type=image,name=$IMAGE_BACKUP,push=true
     # - apk add curl
     # - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     # - tar -xvf manifest-tool.tar.gz
@@ -72,18 +70,32 @@
 
 .rules_template_arm: &rules_template_arm
   rules:
-    - if: '$CI_COMMIT_BRANCH == "dungla"'
+    - if: '$CI_COMMIT_BRANCH == "deployment/dev"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "dungla"'
+    - if: '$CI_COMMIT_BRANCH != "deployment/dev"'
     #       || $CI_COMMIT_BRANCH != "deployment/staging"
     #       || $CI_COMMIT_BRANCH != "master"'
       when: never
 
 .before_script_template_arm: &before_script_template_arm
   before_script:
-    - if [ "$CI_COMMIT_BRANCH" == "dungla" ]; then ENV="dev"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
     # - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
+
+.manifest_multi_arch: &manifest_multi_arch
+  script: 
+    - apk add curl
+    - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
+    - tar -xvf manifest-tool.tar.gz
+    - >-
+      ./manifest-tool-linux-arm64
+      --username=AWS
+      --password=$ECR_PASSWORD
+      push from-args
+      --platforms linux/amd64,linux/arm64
+      --template $ECR_REPO:ARCH-$VERSION
+      --target $IMAGE_BACKUP
 
 
 .build_arm:
@@ -94,3 +106,8 @@
     - .rules_template_arm
     - .tags_template_arm
     - .script_template_arm
+
+.push_multi_arch:
+  extends: 
+    - .docker_templates_arm
+    - .manifest_multi_arch
