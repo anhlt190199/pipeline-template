@@ -25,6 +25,7 @@
     # const
     - !reference [.image_info_template_arm, script]
     # lint & pre-build
+    - apk add git
     - yarn
     - yarn lint
     - yarn build:$ENV
