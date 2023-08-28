@@ -17,13 +17,17 @@
     DOCKER_HOST: tcp://localhost:2375
   image:
     name: ladung/node16-buildkit12:docker-aws
-  script:
-    - >
-      aws ecr get-login-password --region $AWS_DEFAULT_REGION |
-      docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
   artifacts:
     paths:
       - dist
+
+.docker_login_arm: &docker_login_arm
+  script:
+    - ECR_PASSWORD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
+    - >
+      aws ecr get-login-password --region $AWS_DEFAULT_REGION |
+      docker login --username AWS --password-stdin $DOCKER_REGISTRY_HOST
+
 .script_template_arm: &script_template_arm
   script:
     # const
@@ -32,7 +36,7 @@
     - yarn install
     - yarn lint
     - yarn build:$ENV
-    - ECR_PASSWORD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
+    - !reference [.docker_login_arm, script]
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
@@ -91,6 +95,7 @@
 .script_manifest_multi_arch: &script_manifest_multi_arch
   script: 
     - !reference [.image_info_template_arm, script]
+    - !reference [.docker_login_arm, script]
     - apk add curl
     - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     - tar -xvf manifest-tool.tar.gz
