@@ -11,16 +11,16 @@
     - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
     - ECR_REPO=$DOCKER_REGISTRY_HOST/$APPLICATION
-.docker_templates_arm:
+.docker_templates_arm: &docker_templates_arm
   variables:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: ladung/node16-buildkit12:docker-aws-arm
+    name: public.ecr.aws/o0k0x2h7/ci-node:v14-gitops
   artifacts:
     paths:
       - dist
-.script_template_arm:
+.script_template_arm: &script_template_arm
   script:
     # const
     - !reference [.image_info_template_arm, script]
