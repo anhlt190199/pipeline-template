@@ -35,7 +35,7 @@
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache2 --import-cache type=registry,ref=$IMAGE_FIX
+      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
       --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true
     # - >
     #   buildctl --addr tcp://buildkitd:1234   
@@ -69,6 +69,10 @@
     - hll-runner-core-arm
 
 .rules_template_arm: &rules_template_arm
+  before_script:
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
+    # - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
+    # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
   rules:
     - if: '$CI_COMMIT_BRANCH == "deployment/dev"'
       when: always
@@ -83,8 +87,9 @@
     # - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
-.manifest_multi_arch: &manifest_multi_arch
+.script_manifest_multi_arch: &script_manifest_multi_arch
   script: 
+    - !reference [.image_info_template_arm, script]
     - apk add curl
     - curl -L -o manifest-tool.tar.gz https://github.com/estesp/manifest-tool/releases/download/v2.0.8/binaries-manifest-tool-2.0.8.tar.gz
     - tar -xvf manifest-tool.tar.gz
@@ -110,4 +115,6 @@
 .push_multi_arch:
   extends: 
     - .docker_templates_arm
-    - .manifest_multi_arch
+    - .tags_template_arm
+    - .rules_template_arm
+    - .script_manifest_multi_arch
