@@ -40,7 +40,7 @@
     #   --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache2 --import-cache type=registry,ref=$IMAGE_FIX
     #   --output type=image,name=$IMAGE_BACKUP,push=true
     - >
-      buildctl --addr tcp://buildkitd:1234   
+      buildctl --addr kube-pod://buildkitd-0   
       build --frontend dockerfile.v0 --opt platform=linux/amd64 --local context=. --local dockerfile=. 
       --opt filename=.docker/dev.dockerfile
       --output type=image,name=$IMAGE_BACKUP,push=true
