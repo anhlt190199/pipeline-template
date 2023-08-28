@@ -16,7 +16,7 @@
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: public.ecr.aws/o0k0x2h7/ci-node:v14-gitops
+    name: ladung/node16-buildkit12:docker-aws-arm
   artifacts:
     paths:
       - dist
@@ -25,7 +25,6 @@
     # const
     - !reference [.image_info_template_arm, script]
     # lint & pre-build
-    - apk add git
     - yarn
     - yarn lint
     - yarn build:$ENV
