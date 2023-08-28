@@ -26,7 +26,7 @@
     - !reference [.image_info_template_arm, script]
     # lint & pre-build
     - rm -f package-lock.json || true
-    - npm install
+    - yarn install
     - yarn lint
     - yarn build:$ENV
     - ECR_PASSWORD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
