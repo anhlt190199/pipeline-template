@@ -135,8 +135,7 @@ include:
     - !reference [.disable_trivy, rules]
     - !reference [.rules_template, rules]
   needs:
-    - build
-    # - build_arm
+    - multi_arch
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.trivy-report.md

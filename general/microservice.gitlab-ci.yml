@@ -14,12 +14,12 @@ build_arm:
   extends:
     - .build_arm
 
-# multi_arch: 
-#   extends: 
-#     - .push_multi_arch
-#   needs:
-#     - build
-#     - build_arm
+multi_arch: 
+  extends: 
+    - .push_multi_arch
+  needs:
+    - build
+    - build_arm
 dependency-check:
   extends:
     - .dependency-check

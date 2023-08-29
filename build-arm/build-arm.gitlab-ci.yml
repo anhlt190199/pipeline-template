@@ -8,7 +8,7 @@ include:
   script:
     - APPLICATION=$CI_PROJECT_NAME
     - VERSION=$ENV-$(git rev-parse --short HEAD)
-    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV-$platforms
+    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV-arm64
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
     - ECR_REPO=$DOCKER_REGISTRY_HOST/$APPLICATION
 .docker_templates_arm: &docker_templates_arm
@@ -16,7 +16,7 @@ include:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: ladung/node16-buildkit12:docker-aws
+    name: public.ecr.aws/o0k0x2h7/ci-node:v16-buildkit12-gitops
   artifacts:
     paths:
       - dist
