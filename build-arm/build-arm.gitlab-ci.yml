@@ -80,7 +80,9 @@ include:
     - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
   rules:
-    - if: '$CI_COMMIT_BRANCH == "deployment/dev"'
+    - if: '$CI_COMMIT_BRANCH == "deployment/dev"
+          || $CI_COMMIT_BRANCH == "deployment/staging"
+          || $CI_COMMIT_BRANCH == "master"'
       when: always
     - if: '$CI_COMMIT_BRANCH != "deployment/dev"
           || $CI_COMMIT_BRANCH != "deployment/staging"
