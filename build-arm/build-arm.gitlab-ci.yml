@@ -40,7 +40,7 @@
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --opt platform=linux/arm64 --local context=. --local dockerfile=. 
-      --opt filename=.docker/dev.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
+      --opt filename=.docker/$ENV.dockerfile --export-cache type=local,dest=/data/cache --import-cache type=registry,ref=$IMAGE_FIX
       --output type=image,name=$ECR_REPO:arm64-$VERSION,push=true
     # - >
     #   buildctl --addr tcp://buildkitd:1234   
