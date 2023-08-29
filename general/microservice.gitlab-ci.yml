@@ -10,9 +10,11 @@ include:
 build:
   extends:
     - .build
+  allow_failure: false
 build_arm:
   extends:
     - .build_arm
+  allow_failure: false
 
 multi_arch: 
   extends: 
@@ -20,6 +22,7 @@ multi_arch:
   needs:
     - build
     - build_arm
+  allow_failure: false
 dependency-check:
   extends:
     - .dependency-check
