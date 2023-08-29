@@ -134,8 +134,6 @@ include:
     - !reference [.disable_all_scans, rules]
     - !reference [.disable_trivy, rules]
     - !reference [.rules_template, rules]
-  needs:
-    - multi_arch
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.trivy-report.md
