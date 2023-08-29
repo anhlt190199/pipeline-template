@@ -16,7 +16,7 @@
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: ladung/node16-buildkit12:docker-aws
+    name: public.ecr.aws/o0k0x2h7/ci-node:v16-gitops
   artifacts:
     paths:
       - dist

@@ -136,6 +136,7 @@ include:
     - !reference [.rules_template, rules]
   needs:
     - build
+    - build_arm
   artifacts:
     paths:
       - $CI_PROJECT_DIR/.trivy-report.md
