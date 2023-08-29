@@ -37,5 +37,4 @@ snyk-scan:
 trivy-scan:
   extends:
     - .trivy-scan
-  needs:
-    - multi_arch
+  
