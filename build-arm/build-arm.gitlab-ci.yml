@@ -1,14 +1,14 @@
-# include:
-#   - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
-#     ref: main
-#     file:
-#       - 'build/build.gitlab-ci.yml'
+include:
+  - project: c2/hll21054-hll-hello-kyc/operation-2023/pipeline-template
+    ref: main
+    file:
+      - 'build/build.gitlab-ci.yml'
 
 .image_info_template_arm: &image_info_template_arm
   script:
     - APPLICATION=$CI_PROJECT_NAME
     - VERSION=$ENV-$(git rev-parse --short HEAD)
-    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV
+    - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV-$platforms
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
     - ECR_REPO=$DOCKER_REGISTRY_HOST/$APPLICATION
 .docker_templates_arm: &docker_templates_arm
@@ -37,6 +37,7 @@
     - yarn lint
     - yarn build:$ENV
     - !reference [.docker_login_arm, script]
+    - export platforms=arm64
     - >
       buildctl --addr tcp://buildkitd:1234 
       build --frontend dockerfile.v0 --local context=. --local dockerfile=. 
