@@ -19,7 +19,7 @@ build_arm:
 multi_arch: 
   extends: 
     - .push_multi_arch
-  retry: 3
+  retry: 2
   needs:
     - build
     - build_arm
