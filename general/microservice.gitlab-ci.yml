@@ -15,11 +15,11 @@ build_arm:
   extends:
     - .build_arm
   allow_failure: false
+  retry: 2
 
 multi_arch: 
   extends: 
     - .push_multi_arch
-  retry: 2
   needs:
     - build
     - build_arm
