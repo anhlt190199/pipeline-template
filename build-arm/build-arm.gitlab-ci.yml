@@ -16,7 +16,7 @@ include:
     # common variable
     DOCKER_HOST: tcp://localhost:2375
   image:
-    name: public.ecr.aws/o0k0x2h7/ci-node:v14-buildkit12-gitops
+    name: public.ecr.aws/o0k0x2h7/ci-node:v16-buildkit12-gitops
   artifacts:
     paths:
       - dist
