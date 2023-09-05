@@ -97,6 +97,8 @@ include:
     # - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
 
 .script_manifest_multi_arch: &script_manifest_multi_arch
+  image:
+    name: public.ecr.aws/o0k0x2h7/ci-node:v16-gitops
   script: 
     - !reference [.image_info_template_arm, script]
     - !reference [.docker_login_arm, script]
