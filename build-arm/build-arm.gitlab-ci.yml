@@ -126,7 +126,6 @@ include:
 
 .push_multi_arch:
   extends: 
-    - .docker_templates_arm
     - .tags_template_arm
     - .rules_template_arm
     - .script_manifest_multi_arch
