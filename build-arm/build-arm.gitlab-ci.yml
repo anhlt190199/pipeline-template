@@ -33,7 +33,7 @@ include:
     # const
     - !reference [.image_info_template_arm, script]
     # lint & pre-build
-    - yarn || true
+    - yarn
     - yarn lint
     - yarn build:$ENV
     - !reference [.docker_login_arm, script]
