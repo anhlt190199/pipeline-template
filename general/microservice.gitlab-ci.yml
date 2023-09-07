@@ -11,6 +11,8 @@ build:
   extends:
     - .build
   allow_failure: false
+  retry: 2
+  
 build_arm:
   extends:
     - .build_arm
