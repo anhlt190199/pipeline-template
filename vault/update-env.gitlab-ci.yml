@@ -19,13 +19,14 @@
 
 .update: &update
   script:
+    - cd $CI_PROJECT_DIR
+    - ls -la
     - >
-      cd $CI_PROJECT_DIR
-      ls -la
       for i in $(git diff --name-only HEAD^ HEAD | tr -d "")
       do
       if [[ "$i" == *.sh ]]; then
           echo $i
+          sh $i
       else
           continue
       fi
