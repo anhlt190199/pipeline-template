@@ -15,7 +15,7 @@
     VAULT_ADDR: https://vault.local.dentity.com
   before_script:
     - >
-      vault login -address=$VAULT_ADDR -method=userpass username=supperadmin password=$VAULT_PASS
+      vault login -address=$VAULT_ADDR -method=userpass username=superadmin password=$VAULT_PASS
 
 .update: &update
   script:
