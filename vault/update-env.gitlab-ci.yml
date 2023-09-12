@@ -5,6 +5,8 @@
       when: always
     - if: '$CI_COMMIT_BRANCH != "develop"'
       when: never
+  tags:
+    - hll-runner-core
 
 .before-update-env: &before-update
   image:
