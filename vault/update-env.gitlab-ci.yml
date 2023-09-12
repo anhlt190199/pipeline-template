@@ -35,3 +35,4 @@ update-env:
   extends:
     - .before-update-env
     - .update
+    - .rules_update
