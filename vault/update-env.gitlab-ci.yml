@@ -1,0 +1,35 @@
+
+.rules_update: &rules_update
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      when: never
+
+.before-update-env: &before-update
+  image:
+    name: vault:1.13.3
+  variables:
+    VAULT_ADDR: https://vault.local.dentity.com
+  before_script:
+    - >
+      vault login -address=$VAULT_ADDR -method=userpass username=supperadmin password=$VAULT_PASS
+
+.update: &update
+  script:
+    - >
+      cd $CI_PROJECT_DIR
+      ls -la
+      for i in $(git diff --name-only HEAD^ HEAD | tr -d "")
+      do
+      if [[ "$i" == *.sh ]]; then
+          echo $i
+      else
+          continue
+      fi
+      done
+
+update-env:
+  extends:
+    - .before-update-env
+    - .update
