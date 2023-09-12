@@ -20,8 +20,9 @@
 .update: &update
   script:
     - cd $CI_PROJECT_DIR
+    - apk add git
     - ls -la
-    - >
+    - |+
       for i in $(git diff --name-only HEAD^ HEAD | tr -d "")
       do
       if [[ "$i" == *.sh ]]; then
