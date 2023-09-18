@@ -6,7 +6,7 @@ include:
 
 .image_info_template_arm: &image_info_template_arm
   script:
-    - APPLICATION=$CI_PROJECT_NAME
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev-v2" ]; then APPLICATION=$CI_PROJECT_NAME-v2; else APPLICATION=$CI_PROJECT_NAME; fi
     - VERSION=$ENV-$(git rev-parse --short HEAD)
     - IMAGE_FIX=$DOCKER_REGISTRY_HOST/$APPLICATION:$ENV-arm64
     - IMAGE_BACKUP=$DOCKER_REGISTRY_HOST/$APPLICATION:$VERSION
@@ -77,14 +77,17 @@ include:
 .rules_template_arm: &rules_template_arm
   before_script:
     - if [ "$CI_COMMIT_BRANCH" == "deployment/dev" ]; then ENV="dev"; fi
+    - if [ "$CI_COMMIT_BRANCH" == "deployment/dev-v2" ]; then ENV="dev"; fi
     - if [ "$CI_COMMIT_BRANCH" == "deployment/staging" ]; then ENV="staging"; fi
     - if [ "$CI_COMMIT_BRANCH" == "master" ]; then ENV="production"; fi
   rules:
     - if: '$CI_COMMIT_BRANCH == "deployment/dev"
+          || $CI_COMMIT_BRANCH == "deployment/dev-v2"
           || $CI_COMMIT_BRANCH == "deployment/staging"
           || $CI_COMMIT_BRANCH == "master"'
       when: always
     - if: '$CI_COMMIT_BRANCH != "deployment/dev"
+          || $CI_COMMIT_BRANCH != "deployment/dev-v2"
           || $CI_COMMIT_BRANCH != "deployment/staging"
           || $CI_COMMIT_BRANCH != "master"'
       when: never
