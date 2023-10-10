@@ -49,5 +49,5 @@ release:
   script:
     - semantic-release
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ ^release-*'
+    - if: '$CI_COMMIT_BRANCH =~ /^release-*'
   
