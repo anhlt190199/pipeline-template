@@ -42,7 +42,7 @@ trivy-scan:
     - .trivy-scan
 
 release:
-  image: node:14-buster-slim
+  image: node:16-buster-slim
   before_script:
     - yarn install
   script:
