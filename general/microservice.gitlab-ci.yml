@@ -48,6 +48,8 @@ release:
     - npm install -g semantic-release @semantic-release/gitlab
   script:
     - semantic-release
+  tags:
+    - hll-runner-core
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^release-*/'
   
