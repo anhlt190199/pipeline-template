@@ -43,11 +43,11 @@ trivy-scan:
 
 release:
   image: node:14-buster-slim
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
-    - npm install -g semantic-release @semantic-release/gitlab
+  # before_script:
+  #   - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
+  #   - npm install -g semantic-release @semantic-release/gitlab
   script:
-    - semantic-release
+    - yarn release
   tags:
     - hll-runner-core
   rules:
