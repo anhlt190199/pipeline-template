@@ -42,9 +42,9 @@ trivy-scan:
     - .trivy-scan
 
 release:
-  image: node:16-buster-slim
-  before_script:
-    - yarn install
+  image: public.ecr.aws/o0k0x2h7/ci-node:v16-bullseye-buildkit12-gitops
+  before_script:    
+    - yarn
   script:
     - yarn release
   tags:
