@@ -90,3 +90,42 @@ For open source projects, say how it is licensed.
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+# Git Branch
+-------------
+
+## [RB01] Branch naming convention có ý nghĩa:
+
+-   main  branch:  nhận giá trị  "develop" (với gitlab sẽ setting ở default branch: Setting/ Repository/ Default branch)
+
+-   deployment branch: nhận 1 trong các giá trị deployment/dev, deployment/staging, deployment/uat mỗi branch này sẽ tương ứng với các triển khai tự động (Continuous Integration + Continuous Deployment)
+
+    -   deployment/dev: tương ứng với môi trường dành cho nhóm phát triển, kiểm thử
+
+    -   deployment/staging: tương ứng với môi trường kiểm thử cho phía khách hàng (đây cũng là môi trường gần nhất với môi trường production)
+
+    -   delivery branch: nhận duy nhất 1 giá trị "master", branch này sẽ tương ứng với việc triển khai tích hợp thủ công (cần xác nhận)
+
+        -   Loại tích hợp này thường sẽ là Continuous Integration + Continuous Delivery
+
+        -   Branch này chỉ nhận duy nhất 1 merge request từ các branch có prefix: release/....
+
+-   branch phụ: ⇒ tổ chức chia thành các nhóm branch sau đây
+
+    -   feature/*: phải được checkout ra từ main branch. Được sử dụng để phát triển các tính năng mới phục vụ cho release sau này
+
+    -   bugfix/*: phải được checkout ra từ develop branch để xử lý các bug lỗi, issue
+
+    -   hotfix/*: phải được checkout ra từ master branch để sửa nhanh những lỗi trên production.
+
+    -   release/*: phải được checkout ra từ develop. Ngoài ra branch này chỉ được tạo merge request vào 2 branch là develop + master
+
+## [RB02] Permission branch: các branch cần được cấp các quyền hành nhất định
+
+-   main  branch: chỉ được ủy quyền cho maintainer (thường là leader)
+
+-   deployment  branch: chỉ được ủy quyền cho maintainer (thường là leader)
+
+-   protected  branch: được set cho main + deployment + delivery branch ( develop + master + dev+ staging)
+
+-   Không cấp quyền override commit với các branch main + deployment + delivery branch: nếu có ủy quyền cho member, chỉ ủy quyền được tạo merge request.
