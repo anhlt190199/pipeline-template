@@ -10,7 +10,6 @@
     # enable layer-cache
     # DOCKER_BUILDKIT_CACHE: 1
   services:
-#    - docker:stable-dind
     - public.ecr.aws/o0k0x2h7/ci-node:docker-dind
   image:
     name: public.ecr.aws/g5j7s8k4/ci-node:v14-gitops
